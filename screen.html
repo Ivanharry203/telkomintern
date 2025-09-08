@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Viewer Spreadsheet dengan Warna Asli</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    h2 {
+      color: #1a73e8;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .api-key-container {
+      margin-bottom: 15px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .api-key-container input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 100%;
+      max-width: 500px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .api-key-container p {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    #inputForm {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    #sheetUrl {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      flex: 1;
+      min-width: 300px;
+      font-size: 16px;
+    }
+    
+    .sheet-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .sheet-selector select {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      min-width: 200px;
+    }
+    
+    button {
+      background-color: #1a73e8;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-weight: 500;
+    }
+    
+    button:hover {
+      background-color: #0d62c9;
+    }
+    
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    
+    #tabel {
+      margin-top: 20px;
+      overflow-x: auto;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 10px;
+      position: relative;
+    }
+    
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background-color: white;
+      font-size: 14px;
+      border: 1px solid #e0e0e0;
+    }
+    
+    th, td {
+      border: 1px solid #e0e0e0;
+      padding: 8px 12px;
+      text-align: left;
+      position: relative;
+      font-family: Arial, sans-serif;
+      height: 28px;
+    }
+    
+    th {
+      background-color: #f8f9fa;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      min-width: 120px;
+      color: #202124;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    
+    tr:hover {
+      background-color: #f1f3f4;
+    }
+    
+    .filter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .filter-icon {
+      cursor: pointer;
+      color: #5f6368;
+      padding: 4px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .filter-icon:hover {
+      background-color: #e6e6e6;
+    }
+    
+    .filter-dropdown {
+      position: absolute;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 15px;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      min-width: 240px;
+      max-height: 350px;
+      overflow-y: auto;
+      border-radius: 4px;
+      display: none;
+    }
+    
+    .filter-item {
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+    }
+    
+    .filter-checkbox {
+      margin-right: 10px;
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+    
+    .filter-input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .filter-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+      gap: 10px;
+    }
+    
+    .filter-buttons button {
+      flex: 1;
+      padding: 8px;
+      font-size: 13px;
+    }
+    
+    .filter-color-options {
+      margin-top: 10px;
+      border-top: 1px solid #eee;
+      padding-top: 10px;
+    }
+    
+    .filter-color-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #555;
+    }
+    
+    .color-filter-item {
+      display: flex;
+      align-items: center;
+      margin: 6px 0;
+      cursor: pointer;
+    }
+    
+    .color-box {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+    
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      max-width: 80%;
+      max-height: 80%;
+      overflow: auto;
+      text-align: center;
+    }
+    
+    .modal-content img {
+      max-width: 100%;
+      margin: 15px 0;
+      border: 1px solid #ddd;
+    }
+    
+    .loading {
+      text-align: center;
+      padding: 30px;
+      color: #5f6368;
+      font-size: 16px;
+    }
+    
+    .loading i {
+      margin-right: 10px;
+    }
+    
+    .filter-active {
+      color: #1a73e8;
+    }
+    
+    .error {
+      color: #d93025;
+      padding: 15px;
+      background: #fce8e6;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    
+    @media (max-width: 768px) {
+      #inputForm {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      #sheetUrl {
+        min-width: unset;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet-viewer" style="max-width:1000px;margin:24px auto;padding:16px;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,.06);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,'Noto Sans','Apple Color Emoji','Segoe UI Emoji';">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+      <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;text-decoration:none;line-height:1;">
+        <span style="font-size:18px;">←</span>
+        <span style="font-weight:600;">Kembali</span>
+      </a>
+      <h2 style="margin:0;font-size:20px;">📊 Google Spreadsheet Viewer dengan Warna Asli</h2>
+    </div>
+
+  <div class="api-key-container">
+    <label for="apiKey">API Key (opsional, untuk akses data dan warna):</label>
+    <input type="text" id="apiKey" placeholder="masukkan kode">
+    <p>Dapatkan API Key dari <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></p>
+    <p>AIzaSyAR5FqH4q8bktb-DHqYjGeGpxhccmORNIA</p>
+  </div>
+
+  <div id="inputForm">
+    <input type="text" id="sheetUrl" placeholder="Masukkan URL Google Spreadsheet">
+    <button onclick="loadFromUrl()">Tampilkan</button>
+    <button onclick="copyAsPNG()">Copy as PNG</button>
+  </div>
+
+  <div class="sheet-selector" id="sheetSelector" style="display: none;">
+    <label for="sheetSelect">Pilih Sheet:</label>
+    <select id="sheetSelect" onchange="changeSheet()"></select>
+  </div>
+
+  <div id="tabel"></div>
+
+  <!-- Popup Modal -->
+  <div id="popup" class="modal">
+    <div class="modal-content">
+      <h3>📷 Hasil Tangkapan</h3>
+      <img id="previewImg" src="">
+      <br>
+      <button onclick="downloadPNG()">Download</button>
+      <button onclick="copyClipboard()">Copy</button>
+      <button onclick="closePopup()">Tutup</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script>
+    // Variabel global
+    let originalData = [];
+    let filteredData = [];
+    let currentFilters = {};
+    let colorMap = {};
+    let colorFilters = {};
+    let apiKey = '';
+    let sheetId = '';
+    let sheetsList = [];
+    let currentSheetId = 0;
+
+    // Fungsi untuk mengekstrak ID spreadsheet dari URL
+    function extractSheetId(url) {
+      const match = url.match(/\/d\/([a-zA-Z0-9-_]+)/);
+      return match ? match[1] : null;
+    }
+
+    // Fungsi untuk memuat data dari URL
+    function loadFromUrl() {
+      const url = document.getElementById("sheetUrl").value.trim();
+      apiKey = document.getElementById("apiKey").value.trim();
+      sheetId = extractSheetId(url);
+      
+      if (sheetId) {
+        if (apiKey) {
+          loadSheetList();
+        } else {
+          showError("API Key diperlukan untuk mengakses daftar sheet.");
+        }
+      } else {
+        showError("Link Google Spreadsheet tidak valid!");
+      }
+    }
+
+    // Fungsi untuk memuat daftar sheet
+    function loadSheetList() {
+      document.getElementById("tabel").innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Memuat daftar sheet...</div>';
+      
+      const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`;
+      
+      fetch(apiUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          sheetsList = data.sheets;
+          populateSheetSelector();
+          changeSheet();
+        })
+        .catch(error => {
+          console.error("Error memuat daftar sheet:", error);
+          showError("Gagal memuat daftar sheet: " + error.message);
+        });
+    }
+
+    // Fungsi untuk mengisi dropdown pemilih sheet
+    function populateSheetSelector() {
+      const sheetSelect = document.getElementById("sheetSelect");
+      sheetSelect.innerHTML = '';
+      
+      sheetsList.forEach((sheet, index) => {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = sheet.properties.title;
+        sheetSelect.appendChild(option);
+      });
+      
+      document.getElementById("sheetSelector").style.display = "flex";
+    }
+
+    // Fungsi untuk mengganti sheet yang aktif
+    function changeSheet() {
+      const sheetSelect = document.getElementById("sheetSelect");
+      currentSheetId = parseInt(sheetSelect.value);
+      
+      if (apiKey) {
+        loadSheetWithAPI(sheetId, currentSheetId);
+      } else {
+        loadSheetWithCSV(sheetId);
+      }
+    }
+
+    // Fungsi untuk memuat data menggunakan Sheets API v4 (dengan warna)
+    function loadSheetWithAPI(sheetId, sheetIndex) {
+      document.getElementById("tabel").innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Memuat data dan warna...</div>';
+      
+      // Format URL untuk Sheets API
+      const apiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?includeGridData=true&key=${apiKey}`;
+      
+      fetch(apiUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error ${response.status}: ${response.statusText}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          processAPIData(data, sheetIndex);
+        })
+        .catch(error => {
+          console.error("Error dengan Sheets API:", error);
+          document.getElementById("tabel").innerHTML = 
+            `<div class="error">❌ Gagal memuat data melalui API: ${error.message}. 
+             <br>Mencoba metode CSV sebagai fallback...</div>`;
+          loadSheetWithCSV(sheetId);
+        });
+    }
+
+    // Fungsi untuk memproses data dari Sheets API
+    function processAPIData(data, sheetIndex) {
+      try {
+        // Reset state
+        currentFilters = {};
+        colorFilters = {};
+        colorMap = {};
+        
+        // Ambil sheet yang dipilih
+        const sheet = data.sheets[sheetIndex];
+        const gridData = sheet.data[0];
+        const rowData = gridData.rowData || [];
+        
+        // Proses data dan warna
+        const rows = [];
+        
+        for (let i = 0; i < rowData.length; i++) {
+          const row = rowData[i];
+          const cells = row.values || [];
+          const rowValues = [];
+          
+          for (let j = 0; j < cells.length; j++) {
+            const cell = cells[j];
+            // Ambil nilai sel
+            const value = cell.formattedValue || '';
+            rowValues.push(value);
+            
+            // Ambil warna latar belakang jika ada
+            if (cell.effectiveFormat && cell.effectiveFormat.backgroundColor) {
+              const bgColor = cell.effectiveFormat.backgroundColor;
+              const hexColor = rgbToHex(
+                Math.round((bgColor.red || 0) * 255),
+                Math.round((bgColor.green || 0) * 255),
+                Math.round((bgColor.blue || 0) * 255)
+              );
+              
+              if (!colorMap[i]) colorMap[i] = {};
+              colorMap[i][j] = hexColor;
+            }
+          }
+          
+          rows.push(rowValues);
+        }
+        
+        // Simpan data
+        originalData = rows;
+        filteredData = [...originalData];
+        
+        // Render tabel
+        renderTableWithFilters();
+      } catch (error) {
+        console.error("Error processing API data:", error);
+        showError("Terjadi kesalahan saat memproses data dari API: " + error.message);
+      }
+    }
+
+    // Fungsi untuk mengonversi RGB ke HEX
+    function rgbToHex(r, g, b) {
+      return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    // Fungsi untuk memuat data menggunakan CSV (fallback tanpa warna)
+    function loadSheetWithCSV(sheetId) {
+      document.getElementById("tabel").innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Memuat data...</div>';
+      
+      const apiUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv`;
+      
+      fetch(apiUrl)
+        .then(res => {
+          if (!res.ok) throw new Error("Gagal mengambil data");
+          return res.text();
+        })
+        .then(csv => {
+          parseCSVData(csv);
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          showError("❌ Gagal memuat data. Pastikan sheet sudah dipublikasikan (File → Bagikan → Publikasikan ke web).");
+        });
+    }
+
+    // Fungsi untuk menampilkan error
+    function showError(message) {
+      document.getElementById("tabel").innerHTML = `<div class="error">${message}</div>`;
+    }
+
+    // Fungsi untuk memproses data CSV
+    function parseCSVData(csv) {
+      // Reset state
+      currentFilters = {};
+      colorFilters = {};
+      colorMap = {};
+      
+      const rows = csv.split("\n").map(row => {
+        // Handle quoted fields that might contain commas
+        const result = [];
+        let inQuotes = false;
+        let currentValue = "";
+        
+        for (let i = 0; i < row.length; i++) {
+          const char = row[i];
+          
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === ',' && !inQuotes) {
+            result.push(currentValue);
+            currentValue = "";
+          } else {
+            currentValue += char;
+          }
+        }
+        
+        result.push(currentValue);
+        return result;
+      });
+
+      // Simpan data asli
+      originalData = rows;
+      filteredData = [...originalData];
+      
+      // Generate color map based on cell values (simulasi warna dari spreadsheet)
+      generateColorMap(rows);
+      
+      // Render tabel dengan filter
+      renderTableWithFilters();
+    }
+
+    // Fungsi untuk menghasilkan peta warna dari data
+    function generateColorMap(rows) {
+      colorMap = {};
+      
+      // Warna berdasarkan nilai di kolom TYPE
+      const colors = {
+        'AP_CISCO_AIR-AP_ADA': '#e6f4ea', // Hijau muda
+        'AP_CISCO_AIR-AP_TIDAK_ADA': '#fce8e6', // Merah muda
+        'AP_CISCO_AIR-CAP16021-C-K9': '#e8f0fe', // Biru muda
+        'AP_CISCO_AIR-CAP3502E-C-K9': '#fff8e1', // Kuning muda
+        'AP_CISCO_AIR-AP18321-F-K9': '#f3e5f5' // Ungu muda
+      };
+      
+      // Beri warna berdasarkan nilai di kolom TYPE (kolom index 1)
+      for (let i = 1; i < rows.length; i++) {
+        if (rows[i][1]) {
+          const typeValue = rows[i][1].trim();
+          if (colors[typeValue]) {
+            if (!colorMap[i]) colorMap[i] = {};
+            colorMap[i][1] = colors[typeValue];
+          }
+        }
+      }
+    }
+
+    // Fungsi untuk merender tabel dengan filter
+    function renderTableWithFilters() {
+      if (filteredData.length === 0) {
+        document.getElementById("tabel").innerHTML = "Tidak ada data yang sesuai dengan filter.";
+        return;
+      }
+
+      let table = `<table id="sheetTable">`;
+      
+      // Header row with filter icons
+      table += "<tr>";
+      filteredData[0].forEach((cell, colIndex) => {
+        const isFilterActive = currentFilters[colIndex] && 
+                              (currentFilters[colIndex].values.length > 0 || 
+                               (colorFilters[colIndex] && colorFilters[colIndex].length > 0));
+        
+        table += `<th>
+          <div class="filter-header">
+            <span>${cell}</span>
+            <i class="fas fa-filter filter-icon ${isFilterActive ? 'filter-active' : ''}" 
+               onclick="toggleFilterDropdown(${colIndex}, event)"></i>
+          </div>
+        </th>`;
+      });
+      table += "</tr>";
+      
+      // Data rows
+      for (let i = 1; i < filteredData.length; i++) {
+        const row = filteredData[i];
+        if (!row || row.length === 0) continue;
+        
+        table += "<tr>";
+        row.forEach((cell, colIndex) => {
+          const bgColor = colorMap[i] && colorMap[i][colIndex] ? `background-color: ${colorMap[i][colIndex]};` : '';
+          table += `<td style="${bgColor}">${cell}</td>`;
+        });
+        table += "</tr>";
+      }
+      
+      table += "</table>";
+      document.getElementById("tabel").innerHTML = table;
+      
+      // Render dropdown filter setelah tabel dibuat
+      renderAllFilterDropdowns();
+    }
+
+    // Fungsi untuk merender semua dropdown filter
+    function renderAllFilterDropdowns() {
+      // Hapus semua dropdown filter yang sudah ada
+      document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
+        dropdown.remove();
+      });
+      
+      // Buat dropdown filter untuk setiap kolom
+      filteredData[0].forEach((cell, colIndex) => {
+        renderFilterDropdown(colIndex);
+      });
+    }
+
+    // Fungsi untuk merender dropdown filter untuk kolom tertentu
+    function renderFilterDropdown(colIndex) {
+      const columnValues = getAllUniqueValues(colIndex);
+      const currentFilter = currentFilters[colIndex] || { values: [], search: '' };
+      const currentColorFilter = colorFilters[colIndex] || [];
+      
+      // Dapatkan warna unik untuk kolom ini
+      const uniqueColors = getUniqueColorsForColumn(colIndex);
+      
+      const filterDropdown = document.createElement('div');
+      filterDropdown.id = `filter-dropdown-${colIndex}`;
+      filterDropdown.className = 'filter-dropdown';
+      filterDropdown.style.display = 'none';
+      
+      filterDropdown.innerHTML = `
+        <input type="text" class="filter-input" placeholder="Cari..." 
+               onkeyup="filterFilterOptions(${colIndex}, this.value)"
+               value="${currentFilter.search}">
+        <div id="filter-options-${colIndex}">
+          ${columnValues.map(value => `
+            <div class="filter-item">
+              <input type="checkbox" class="filter-checkbox" id="filter-${colIndex}-${value.replace(/[^a-zA-Z0-9]/g, '_')}" 
+                     ${currentFilter.values.includes(value) ? 'checked' : ''}
+                     onchange="updateFilter(${colIndex}, '${value.replace(/'/g, "\\'")}', this.checked)">
+              <label for="filter-${colIndex}-${value.replace(/[^a-zA-Z0-9]/g, '_')}">${value}</label>
+            </div>
+          `).join('')}
+        </div>
+        
+        ${uniqueColors.length > 0 ? `
+        <div class="filter-color-options">
+          <div class="filter-color-title">Filter Berdasarkan Warna:</div>
+          ${uniqueColors.map(colorInfo => `
+            <div class="color-filter-item" onclick="toggleColorFilter(${colIndex}, '${colorInfo.color}')">
+              <div class="color-box" style="background-color: ${colorInfo.color}"></div>
+              <span>${colorInfo.value} (${colorInfo.count})</span>
+              ${currentColorFilter.includes(colorInfo.color) ? '<i class="fas fa-check" style="margin-left: auto; color: #1a73e8;"></i>' : ''}
+            </div>
+          `).join('')}
+        </div>
+        ` : ''}
+        
+        <div class="filter-buttons">
+          <button onclick="applyFilter(${colIndex})">Terapkan</button>
+          <button onclick="resetFilter(${colIndex})">Reset</button>
+        </div>
+      `;
+      
+      document.getElementById("tabel").appendChild(filterDropdown);
+    }
+
+    // Fungsi untuk mendapatkan semua nilai unik dalam kolom
+    function getAllUniqueValues(colIndex) {
+      const values = new Set();
+      for (let i = 1; i < originalData.length; i++) {
+        if (originalData[i][colIndex]) {
+          values.add(originalData[i][colIndex].trim());
+        }
+      }
+      return Array.from(values).sort();
+    }
+    
+    // Fungsi untuk mendapatkan warna unik untuk kolom tertentu
+    function getUniqueColorsForColumn(colIndex) {
+      const colorCounts = {};
+      
+      for (let i = 1; i < originalData.length; i++) {
+        if (originalData[i][colIndex] && colorMap[i] && colorMap[i][colIndex]) {
+          const value = originalData[i][colIndex].trim();
+          const color = colorMap[i][colIndex];
+          
+          if (!colorCounts[color]) {
+            colorCounts[color] = { color, value, count: 0 };
+          }
+          colorCounts[color].count++;
+        }
+      }
+      
+      return Object.values(colorCounts);
+    }
+
+    // Fungsi untuk menampilkan/menyembunyikan dropdown filter
+    function toggleFilterDropdown(colIndex, event) {
+      // Sembunyikan semua dropdown filter lainnya
+      document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
+        dropdown.style.display = 'none';
+      });
+      
+      // Toggle dropdown yang diklik
+      const dropdown = document.getElementById(`filter-dropdown-${colIndex}`);
+      if (dropdown) {
+        const isVisible = dropdown.style.display === 'block';
+        dropdown.style.display = isVisible ? 'none' : 'block';
+        
+        if (!isVisible) {
+          // Posisikan dropdown di bawah header kolom
+          positionFilterDropdown(colIndex);
+        }
+        
+        event.stopPropagation();
+      }
+    }
+
+    // Fungsi untuk memposisikan dropdown filter di bawah header kolom
+    function positionFilterDropdown(colIndex) {
+      const dropdown = document.getElementById(`filter-dropdown-${colIndex}`);
+      const headerCell = document.querySelector(`#sheetTable th:nth-child(${colIndex + 1})`);
+      
+      if (headerCell && dropdown) {
+        // Dapatkan posisi header relatif terhadap tabel
+        const tableRect = document.getElementById('sheetTable').getBoundingClientRect();
+        const headerRect = headerCell.getBoundingClientRect();
+        
+        // Atur posisi dropdown relatif terhadap tabel
+        dropdown.style.position = 'absolute';
+        dropdown.style.top = `${headerRect.bottom - tableRect.top}px`;
+        dropdown.style.left = `${headerRect.left - tableRect.left}px`;
+        dropdown.style.width = `${headerRect.width}px`;
+      }
+    }
+
+    // Fungsi untuk memfilter opsi dalam dropdown
+    function filterFilterOptions(colIndex, searchText) {
+      const optionsContainer = document.getElementById(`filter-options-${colIndex}`);
+      if (!optionsContainer) return;
+      
+      const options = optionsContainer.getElementsByClassName('filter-item');
+      
+      for (let option of options) {
+        const label = option.querySelector('label').textContent.toLowerCase();
+        option.style.display = label.includes(searchText.toLowerCase()) ? 'flex' : 'none';
+      }
+      
+      // Simpan teks pencarian di state filter
+      if (!currentFilters[colIndex]) currentFilters[colIndex] = { values: [], search: '' };
+      currentFilters[colIndex].search = searchText;
+    }
+
+    // Fungsi untuk memperbarui filter
+    function updateFilter(colIndex, value, isChecked) {
+      if (!currentFilters[colIndex]) currentFilters[colIndex] = { values: [], search: '' };
+      
+      if (isChecked) {
+        if (!currentFilters[colIndex].values.includes(value)) {
+          currentFilters[colIndex].values.push(value);
+        }
+      } else {
+        currentFilters[colIndex].values = currentFilters[colIndex].values.filter(v => v !== value);
+      }
+    }
+    
+    // Fungsi untuk mengaktifkan/menonaktifkan filter warna
+    function toggleColorFilter(colIndex, color) {
+      if (!colorFilters[colIndex]) colorFilters[colIndex] = [];
+      
+      if (colorFilters[colIndex].includes(color)) {
+        colorFilters[colIndex] = colorFilters[colIndex].filter(c => c !== color);
+      } else {
+        colorFilters[colIndex].push(color);
+      }
+      
+      // Perbarui tampilan dropdown
+      const dropdown = document.getElementById(`filter-dropdown-${colIndex}`);
+      if (dropdown) {
+        const colorItem = dropdown.querySelector(`.color-filter-item div[style*="${color}"]`).parentNode;
+        if (colorItem) {
+          if (colorFilters[colIndex].includes(color)) {
+            if (!colorItem.querySelector('.fa-check')) {
+              const checkIcon = document.createElement('i');
+              checkIcon.className = 'fas fa-check';
+              checkIcon.style.marginLeft = 'auto';
+              checkIcon.style.color = '#1a73e8';
+              colorItem.appendChild(checkIcon);
+            }
+          } else {
+            const checkIcon = colorItem.querySelector('.fa-check');
+            if (checkIcon) checkIcon.remove();
+            }
+        }
+      }
+    }
+
+    // Fungsi untuk menerapkan filter
+    function applyFilter(colIndex) {
+      // Sembunyikan dropdown
+      document.getElementById(`filter-dropdown-${colIndex}`).style.display = 'none';
+      
+      // Terapkan filter
+      filterData();
+    }
+
+    // Fungsi untuk mereset filter
+    function resetFilter(colIndex) {
+      // Reset filter untuk kolom ini
+      if (currentFilters[colIndex]) {
+        currentFilters[colIndex].values = [];
+        currentFilters[colIndex].search = '';
+      }
+      
+      // Reset color filter
+      if (colorFilters[colIndex]) {
+        colorFilters[colIndex] = [];
+      }
+      
+      // Reset checkbox UI
+      const dropdown = document.getElementById(`filter-dropdown-${colIndex}`);
+      if (dropdown) {
+        const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = false;
+        });
+        
+        const colorChecks = dropdown.querySelectorAll('.fa-check');
+        colorChecks.forEach(check => check.remove());
+      }
+      
+      // Terapkan filter
+      filterData();
+      
+      // Sembunyikan dropdown
+      if (dropdown) dropdown.style.display = 'none';
+    }
+
+    // Fungsi untuk memfilter data
+    function filterData() {
+      filteredData = [originalData[0]]; // Selalu sertakan header
+      
+      for (let i = 1; i < originalData.length; i++) {
+        let includeRow = true;
+        
+        // Filter berdasarkan nilai
+        for (const colIndex in currentFilters) {
+          if (currentFilters[colIndex].values.length > 0) {
+            const cellValue = originalData[i][colIndex] ? originalData[i][colIndex].trim() : '';
+            if (!currentFilters[colIndex].values.includes(cellValue)) {
+              includeRow = false;
+              break;
+            }
+          }
+        }
+        
+        // Filter berdasarkan warna
+        if (includeRow) {
+          for (const colIndex in colorFilters) {
+            if (colorFilters[colIndex].length > 0) {
+              const cellColor = colorMap[i] && colorMap[i][colIndex] ? colorMap[i][colIndex] : '';
+              if (!colorFilters[colIndex].includes(cellColor)) {
+                includeRow = false;
+                break;
+              }
+            }
+          }
+        }
+        
+        if (includeRow) {
+          filteredData.push(originalData[i]);
+        }
+      }
+      
+      renderTableWithFilters();
+    }
+
+    // Tutup dropdown filter ketika klik di luar
+    document.addEventListener('click', function(e) {
+      if (!e.target.matches('.filter-icon') && !e.target.closest('.filter-dropdown')) {
+        document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
+          dropdown.style.display = 'none';
+        });
+      }
+    });
+
+    // Tutup dropdown filter ketika scroll
+    let scrollTimer;
+    window.addEventListener('scroll', function() {
+      // Sembunyikan semua dropdown saat scroll
+      document.querySelectorAll('.filter-dropdown').forEach(dropdown => {
+        dropdown.style.display = 'none';
+      });
+      
+      // Reposisi dropdown setelah scroll selesai (opsional)
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(function() {
+        // Reposisi semua dropdown yang aktif
+        for (let colIndex = 0; colIndex < filteredData[0].length; colIndex++) {
+          const dropdown = document.getElementById(`filter-dropdown-${colIndex}`);
+          if (dropdown && dropdown.style.display === 'block') {
+            positionFilterDropdown(colIndex);
+          }
+        }
+      }, 150);
+    }, { passive: true });
+
+    let capturedImg = "";
+
+    // Fungsi untuk menyalin tabel sebagai PNG
+    function copyAsPNG() {
+      const table = document.getElementById("sheetTable");
+      if (!table) {
+        alert("Tabel belum tersedia!");
+        return;
+      }
+
+      // Ambil ukuran penuh tabel
+      const width = table.scrollWidth;
+      const height = table.scrollHeight;
+
+      html2canvas(table, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#fff",
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: width,
+        windowHeight: height
+      }).then(canvas => {
+        capturedImg = canvas.toDataURL("image/png");
+        document.getElementById("previewImg").src = capturedImg;
+        document.getElementById("popup").style.display = "flex";
+      });
+    }
+
+    // Fungsi untuk menutup popup
+    function closePopup() {
+      document.getElementById("popup").style.display = "none";
+    }
+
+    // Fungsi untuk mengunduh PNG
+    function downloadPNG() {
+      const a = document.createElement("a");
+      a.href = capturedImg;
+      a.download = "spreadsheet.png";
+      a.click();
+    }
+
+    // Fungsi untuk menyalin ke clipboard
+    async function copyClipboard() {
+      try {
+        const data = await fetch(capturedImg);
+        const blob = await data.blob();
+        await navigator.clipboard.write([
+          new ClipboardItem({ "image/png": blob })
+        ]);
+        alert("✅ Gambar berhasil disalin ke clipboard!");
+      } catch (err) {
+        console.error("Gagal menyalin ke clipboard:", err);
+        alert("❌ Gagal menyalin gambar ke clipboard. Browser mungkin tidak mendukung fitur ini.");
+      }
+    }
+  </script>
+</body>
+</html>
