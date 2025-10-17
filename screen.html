@@ -13,35 +13,85 @@
     
     body {
       font-family: 'Segoe UI', Arial, sans-serif;
-      margin: 20px;
+      margin: 0;
       background-color: #f5f5f5;
       color: #333;
       line-height: 1.6;
     }
     
-    h2 {
-      color: #1a73e8;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #ddd;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
     }
     
-    .api-key-container {
-      margin-bottom: 15px;
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 25px;
+      padding: 15px 20px;
       background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border: 1px solid #e5e7eb;
+      border-radius: 30px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    
+    .back-btn:hover {
+      background-color: #f8f9fa;
+      border-color: #c60000;
+      color: #c60000;
+    }
+    
+    .title {
+      font-size: 22px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin: 0;
+    }
+    
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #1a1a1a;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
     }
     
     .api-key-container input {
-      padding: 10px;
+      padding: 12px 15px;
       border: 1px solid #ddd;
-      border-radius: 4px;
+      border-radius: 8px;
       width: 100%;
-      max-width: 500px;
       font-size: 16px;
       margin-bottom: 10px;
+      transition: border 0.3s;
+    }
+    
+    .api-key-container input:focus {
+      border-color: #FF0000;
+      outline: none;
     }
     
     .api-key-container p {
@@ -50,59 +100,51 @@
       margin-top: 5px;
     }
     
-    #inputForm {
-      margin-bottom: 20px;
+    .api-key-container a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    
+    .api-key-container a:hover {
+      text-decoration: underline;
+    }
+    
+    .input-group {
       display: flex;
       gap: 10px;
-      align-items: center;
-      flex-wrap: wrap;
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 10px;
     }
     
     #sheetUrl {
-      padding: 10px;
+      padding: 12px 15px;
       border: 1px solid #ddd;
-      border-radius: 4px;
-      flex: 1;
-      min-width: 300px;
-      font-size: 16px;
-    }
-    
-    .sheet-selector {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 15px;
-      background: white;
-      padding: 15px;
       border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      flex: 1;
+      font-size: 16px;
+      transition: border 0.3s;
     }
     
-    .sheet-selector select {
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 16px;
-      min-width: 200px;
+    #sheetUrl:focus {
+      border-color: #FF0000 ;
+      outline: none;
     }
     
     button {
-      background-color: #1a73e8;
+      background-color:#FF0000;
       color: white;
       border: none;
-      padding: 10px 15px;
-      border-radius: 4px;
+      padding: 12px 20px;
+      border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s;
       font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
     
     button:hover {
-      background-color: #0d62c9;
+      background-color:#FF0000;
     }
     
     button:disabled {
@@ -110,13 +152,34 @@
       cursor: not-allowed;
     }
     
+    .btn-secondary {
+      background-color: #5f6368;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #4a4d52;
+    }
+    
+    .sheet-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    
+    .sheet-selector select {
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 16px;
+      min-width: 200px;
+    }
+    
     #tabel {
       margin-top: 20px;
       overflow-x: auto;
-      background: white;
       border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      padding: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       position: relative;
     }
     
@@ -125,21 +188,20 @@
       width: 100%;
       background-color: white;
       font-size: 14px;
-      border: 1px solid #e0e0e0;
     }
     
     th, td {
       border: 1px solid #e0e0e0;
-      padding: 8px 12px;
+      padding: 10px 12px;
       text-align: left;
       position: relative;
       font-family: Arial, sans-serif;
-      height: 28px;
+      height: 36px;
     }
     
     th {
       background-color: #f8f9fa;
-      font-weight: bold;
+      font-weight: 600;
       position: sticky;
       top: 0;
       z-index: 10;
@@ -184,7 +246,7 @@
       min-width: 240px;
       max-height: 350px;
       overflow-y: auto;
-      border-radius: 4px;
+      border-radius: 8px;
       display: none;
     }
     
@@ -241,6 +303,12 @@
       align-items: center;
       margin: 6px 0;
       cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+    }
+    
+    .color-filter-item:hover {
+      background-color: #f5f5f5;
     }
     
     .color-box {
@@ -267,17 +335,31 @@
     .modal-content {
       background-color: white;
       padding: 25px;
-      border-radius: 8px;
+      border-radius: 12px;
       max-width: 80%;
       max-height: 80%;
       overflow: auto;
       text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    
+    .modal-content h3 {
+      margin-bottom: 15px;
+      color: #1a1a1a;
     }
     
     .modal-content img {
       max-width: 100%;
       margin: 15px 0;
       border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
     }
     
     .loading {
@@ -292,68 +374,109 @@
     }
     
     .filter-active {
-      color: #1a73e8;
+      color: #FF0000;
     }
     
     .error {
       color: #d93025;
       padding: 15px;
       background: #fce8e6;
-      border-radius: 4px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    
+    .success {
+      color: #137333;
+      padding: 15px;
+      background: #e6f4ea;
+      border-radius: 8px;
       margin: 10px 0;
     }
     
     @media (max-width: 768px) {
-      #inputForm {
+      .input-group {
         flex-direction: column;
-        align-items: stretch;
       }
       
-      #sheetUrl {
-        min-width: unset;
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .modal-content {
+        max-width: 95%;
+        padding: 15px;
+      }
+      
+      .modal-buttons {
+        flex-direction: column;
       }
     }
   </style>
 </head>
 <body>
-  <div class="sheet-viewer" style="max-width:1000px;margin:24px auto;padding:16px;border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,.06);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial,'Noto Sans','Apple Color Emoji','Segoe UI Emoji';">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-      <a href="index.html" style="display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid #e5e7eb;border-radius:999px;text-decoration:none;line-height:1;">
-        <span style="font-size:18px;">←</span>
-        <span style="font-weight:600;">Kembali</span>
+  <div class="container">
+    <div class="header">
+      <a href="https://ivanharry203.github.io/websitetelkomintern/web_mark_kordinat/dashboard.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i>
+        <span></span>
       </a>
-      <h2 style="margin:0;font-size:20px;"> screenshor spreedsheet</h2>
+      <h1 class="title" style="color: #0a0f1a; font-weight: 700;">Screenshot Spreadsheet</h1>
     </div>
 
-  <div class="api-key-container">
-    <label for="apiKey">API Key (opsional, untuk akses data dan warna):</label>
-    <input type="text" id="apiKey" placeholder="masukkan kode">
-    <p>Dapatkan API Key dari <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></p>
-    <p>kode yang dimasukkan : AIzaSyAR5FqH4q8bktb-DHqYjGeGpxhccmORNIA</p>
-  </div>
+    <div class="card">
+      <h3 class="card-title">Konfigurasi API</h3>
+      <div class="api-key-container">
+        <label for="apiKey">API Key (opsional, untuk akses data dan warna):</label>
+        <input type="text" id="apiKey" placeholder="Masukkan kode API">
+        <p>Dapatkan API Key dari <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></p>
+        <p>Kode yang dimasukkan: AIzaSyAR5FqH4q8bktb-DHqYjGeGpxhccmORNIA</p>
+      </div>
+    </div>
 
-  <div id="inputForm">
-    <input type="text" id="sheetUrl" placeholder="Masukkan URL Google Spreadsheet">
-    <button onclick="loadFromUrl()">Tampilkan</button>
-    <button onclick="copyAsPNG()">Screenshot dokumen </button>
-  </div>
+    <div class="card">
+      <h3 class="card-title">Data Spreadsheet</h3>
+      <div class="input-group">
+        <input type="text" id="sheetUrl" placeholder="Masukkan URL Google Spreadsheet">
+        <button onclick="loadFromUrl()">
+          <i class="fas fa-table"></i>
+          Tampilkan
+        </button>
+        <button onclick="copyAsPNG()" class="btn-secondary">
+          <i class="fas fa-camera"></i>
+          Screenshot
+        </button>
+      </div>
 
-  <div class="sheet-selector" id="sheetSelector" style="display: none;">
-    <label for="sheetSelect">Pilih Sheet:</label>
-    <select id="sheetSelect" onchange="changeSheet()"></select>
-  </div>
+      <div class="sheet-selector" id="sheetSelector" style="display: none;">
+        <label for="sheetSelect">Pilih Sheet:</label>
+        <select id="sheetSelect" onchange="changeSheet()"></select>
+      </div>
+    </div>
 
-  <div id="tabel"></div>
+    <div id="tabel"></div>
+  </div>
 
   <!-- Popup Modal -->
   <div id="popup" class="modal">
     <div class="modal-content">
-      <h3>📷 Hasil Tangkapan</h3>
-      <img id="previewImg" src="">
+      <h3><i class="fas fa-camera"></i> Hasil Tangkapan Layar</h3>
+      <img id="previewImg" src="" alt="Preview Spreadsheet">
       <br>
-      <button onclick="downloadPNG()">Download</button>
-      <button onclick="copyClipboard()">Copy</button>
-      <button onclick="closePopup()">Tutup</button>
+      <div class="modal-buttons">
+        <button onclick="downloadPNG()">
+          <i class="fas fa-download"></i>
+          Download
+        </button>
+        <button onclick="copyClipboard()">
+          <i class="fas fa-copy"></i>
+          Salin
+        </button>
+        <button onclick="closePopup()" class="btn-secondary">
+          <i class="fas fa-times"></i>
+          Tutup
+        </button>
+      </div>
     </div>
   </div>
 
@@ -717,7 +840,7 @@
             <div class="color-filter-item" onclick="toggleColorFilter(${colIndex}, '${colorInfo.color}')">
               <div class="color-box" style="background-color: ${colorInfo.color}"></div>
               <span>${colorInfo.value} (${colorInfo.count})</span>
-              ${currentColorFilter.includes(colorInfo.color) ? '<i class="fas fa-check" style="margin-left: auto; color: #1a73e8;"></i>' : ''}
+              ${currentColorFilter.includes(colorInfo.color) ? '<i class="fas fa-check" style="margin-left: auto; color: #FF0000;"></i>' : ''}
             </div>
           `).join('')}
         </div>
@@ -725,7 +848,7 @@
         
         <div class="filter-buttons">
           <button onclick="applyFilter(${colIndex})">Terapkan</button>
-          <button onclick="resetFilter(${colIndex})">Reset</button>
+          <button onclick="resetFilter(${colIndex})" class="btn-secondary">Reset</button>
         </div>
       `;
       
@@ -852,7 +975,7 @@
               const checkIcon = document.createElement('i');
               checkIcon.className = 'fas fa-check';
               checkIcon.style.marginLeft = 'auto';
-              checkIcon.style.color = '#1a73e8';
+              checkIcon.style.color = '#FF0000';
               colorItem.appendChild(checkIcon);
             }
           } else {
@@ -1031,5 +1154,4 @@
     }
   </script>
 </body>
-
 </html>
